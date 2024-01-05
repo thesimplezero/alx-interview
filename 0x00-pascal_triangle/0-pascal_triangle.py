@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+"""Module for Pascal's Triangle."""
 
 def pascal_triangle(n):
     """
