@@ -12,19 +12,12 @@ def min_operations(n):
     """
     if not isinstance(n, int) or n <= 1:
         return 0
-
     divisor = 1
-    for i in range(n - 1, 0, -1):
+    i = n - 1
+    while i > 0:
         if n % i == 0:
             divisor = i if i != 0 else 1
             break
-
+        i -= 1
     result = int((min_operations(divisor) if divisor != 1 else 0) + n / divisor)
     return result
-
-
-if __name__ == "__main__":
-    # Example usage
-    input_value = 10
-    result = min_operations(input_value)
-    print(f"The fewest number of operations for {input_value} 'H' characters is: {result}")
