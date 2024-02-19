@@ -58,4 +58,3 @@ if (!movieId) {
 } else {
   fetchMovieCharacters(movieId);
 }
-
