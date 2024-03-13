@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 """
-Prime Game module optimized for Python 3.8 to Python 10.1 with PEP 8 standards.
+Prime Game module
 """
 
-def is_prime(n: int) -> bool:
+def is_prime(n):
     """Check if a number is prime."""
     if n <= 1:
         return False
@@ -12,32 +12,47 @@ def is_prime(n: int) -> bool:
             return False
     return True
 
-def simulate_game(n: int) -> str:
-    """Simulate a game to determine the winner."""
-    primes = [is_prime(i) for i in range(n + 1)]
-    prime_counts = [0] * (n + 1)
-    for i in range(2, n + 1):
+def isWinner(x, nums):
+    """
+    Determine the winner of each round of the prime game.
+
+    Args:
+        x (int): Number of rounds.
+        nums (list): List of integers representing n for each round.
+
+    Returns:
+        str: Name of the player that won the most rounds.
+             If the winner cannot be determined, returns None.
+    """
+    if not nums or x <= 0:
+        return None
+
+    # Optimize by pre-calculating primes up to the maximum value in nums
+    # This avoids recalculating primes for each n in nums
+    max_num = max(nums)
+    primes = [False, False] + [True] * (max_num - 1)
+    for i in range(2, int(max_num ** 0.5) + 1):
+        if primes[i]:
+            for j in range(i * i, max_num + 1, i):
+                primes[j] = False
+    prime_counts = [0] * (max_num + 1)
+    for i in range(2, max_num + 1):
         prime_counts[i] = prime_counts[i-1] + (1 if primes[i] else 0)
 
-    # The player who starts the last move wins. If the number of primes
-    # up to n is even, Maria wins; otherwise, Ben wins.
-    return 'Maria' if prime_counts[n] % 2 == 0 else 'Ben'
-
-def isWinner(x: int, nums: list) -> str:
-    """Determine the overall winner of x rounds."""
-    wins = {'Maria': 0, 'Ben': 0}
+    ben_wins = 0
+    # Determine the winner for each round
     for n in nums:
-        winner = simulate_game(n)
-        wins[winner] += 1
+        if (prime_counts[n] % 2 == 0):
+            ben_wins += 1
 
-    if wins['Maria'] > wins['Ben']:
-        return 'Maria'
-    elif wins['Ben'] > wins['Maria']:
-        return 'Ben'
+    # Determine the overall winner
+    if ben_wins > x // 2:
+        return "Ben"
+    elif ben_wins < x // 2:
+        return "Maria"
     else:
         return None
 
-# Example usage
 if __name__ == "__main__":
-    print("Winner: {}".format(isWinner(3, [4, 5, 1])))
-    print("Winner: {}".format(isWinner(5, [2, 5, 1, 4, 3])))
+    print(isWinner(3, [4, 5, 1]))
+    print(isWinner(5, [2, 5, 1, 4, 3]))
